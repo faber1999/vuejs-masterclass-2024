@@ -18,7 +18,7 @@ export default [
   {
     name: 'app/typescript-custom-rules',
     rules: {
-      // '@typescript-eslint/no-unused-vars': 'warn',
+      'vue/multi-word-component-names': 0,
     },
   },
 ]
