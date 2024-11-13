@@ -37,6 +37,7 @@ pnpm-lock.yaml
 #environment files
 .env
 .env.*
+!.env.example
 
 #generated files
 typed-router.d.ts
