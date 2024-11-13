@@ -7,5 +7,7 @@ const { params } = useRoute('/projects/[id]')
 <template>
   <div>
     <h1>Hello World {{ params?.id }}</h1>
+
+    <RouterLink to="/projects">Go to projects</RouterLink>
   </div>
 </template>

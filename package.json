@@ -10,15 +10,24 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "supabase:init": "supabase init",
+    "supabase:start": "supabase start",
+    "supabase:login": "supabase login",
+    "supabase:link": "node --env-file=.env -e \"const { execSync } = require('child_process'); execSync('supabase link --project-ref ' + process.env.SUPABASE_PROJECT_REF, { stdio: 'inherit' });\"",
+    "db:migrate:new": "supabase migration new",
+    "db:reset": "supabase db reset --linked",
+    "db:seed": "node --env-file=.env database/seed.js",
+    "supabase:types": "node --env-file=.env -e \"const { execSync } = require('child_process'); execSync('npx supabase gen types --lang=typescript --project-id ' + process.env.SUPABASE_PROJECT_REF + ' --schema public > database/types.ts', { stdio: 'inherit' });\""
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.46.1",
+    "@supabase/supabase-js": "2.43.4",
     "pinia": "^2.2.4",
     "vue": "^3.5.12",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.2.0",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^20.17.0",
     "@vitejs/plugin-vue": "^5.1.4",
@@ -29,6 +38,7 @@
     "eslint-plugin-vue": "^9.29.0",
     "npm-run-all2": "^7.0.1",
     "prettier": "^3.3.3",
+    "supabase": "^1.219.2",
     "typescript": "~5.6.0",
     "unplugin-vue-router": "^0.10.8",
     "vite": "^5.4.10",
