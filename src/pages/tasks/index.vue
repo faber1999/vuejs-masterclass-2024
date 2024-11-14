@@ -22,8 +22,7 @@ const tasks = ref<Tables<'tasks'>[] | null>(null)
 <template>
   <div>
     <h1>Tasks Page</h1>
-    <RouterLink to="/">Go to Home</RouterLink>
-
+    <br />
     <ul>
       <li v-for="task in tasks" :key="task.id">
         {{ task.name }}

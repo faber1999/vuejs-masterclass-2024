@@ -9,6 +9,10 @@
     }
   ],
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "types": ["unplugin-vue-router/client"]
   }
 }

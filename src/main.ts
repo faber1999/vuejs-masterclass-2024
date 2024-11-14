@@ -1,3 +1,6 @@
+import '@/assets/index.css'
+import 'iconify-icon'
+
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
