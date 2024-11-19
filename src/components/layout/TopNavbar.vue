@@ -1,15 +1,4 @@
-<script setup lang="ts">
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import Input from '@/components/ui/input/Input.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <nav class="h-16 border-b bg-muted/40 flex gap-2 justify-between px-6 items-center">

@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { supabase } from '@/lib/supabaseClient'
-import { ref } from 'vue'
-
 import type { Tables } from '@base/database/types'
+import type { ColumnDef } from '@tanstack/vue-table'
+import { RouterLink } from 'vue-router'
+
+usePageStore().pageData.title = 'My Tasks'
 
 const tasks = ref<Tables<'tasks'>[] | null>(null)
 
-;(async () => {
+const getTasks = async () => {
   const { data, error } = await supabase.from('tasks').select()
 
   if (error) {
@@ -14,19 +16,51 @@ const tasks = ref<Tables<'tasks'>[] | null>(null)
   }
 
   tasks.value = data
+}
 
-  console.log('tasks', tasks.value)
-})()
+await getTasks()
+
+const columns: ColumnDef<Tables<'tasks'>>[] = [
+  {
+    accessorKey: 'name',
+    header: () => h('div', { class: 'text-left' }, 'Name'),
+    cell: ({ row }) => {
+      return h(RouterLink, { to: `/tasks/${row.original.id}`, class: 'text-left font-medium underline block w-full hover:bg-muted ' }, () =>
+        row.getValue('name'),
+      )
+    },
+  },
+  {
+    accessorKey: 'status',
+    header: () => h('div', { class: 'text-left' }, 'Status'),
+    cell: ({ row }) => {
+      return h('div', { class: 'text-left' }, row.getValue('status'))
+    },
+  },
+  {
+    accessorKey: 'due_date',
+    header: () => h('div', { class: 'text-left' }, 'Due Date'),
+    cell: ({ row }) => {
+      return h('div', { class: 'text-left' }, row.getValue('due_date'))
+    },
+  },
+  {
+    accessorKey: 'project_id',
+    header: () => h('div', { class: 'text-left' }, 'Project'),
+    cell: ({ row }) => {
+      return h('div', { class: 'text-left' }, row.getValue('project_id'))
+    },
+  },
+  {
+    accessorKey: 'collaborators',
+    header: () => h('div', { class: 'text-left' }, 'Collaborators'),
+    cell: ({ row }) => {
+      return h('div', { class: 'text-left' }, JSON.stringify(row.getValue('collaborators')))
+    },
+  },
+]
 </script>
 
 <template>
-  <div>
-    <h1>Tasks Page</h1>
-    <br />
-    <ul>
-      <li v-for="task in tasks" :key="task.id">
-        {{ task.name }}
-      </li>
-    </ul>
-  </div>
+  <DataTable v-if="tasks" :columns="columns" :data="tasks" />
 </template>
