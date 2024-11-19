@@ -19,6 +19,14 @@ export default [
     name: 'app/typescript-custom-rules',
     rules: {
       'vue/multi-word-component-names': 0,
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
     },
   },
 ]

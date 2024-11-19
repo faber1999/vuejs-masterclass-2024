@@ -1,4 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { VueRouterAutoImports } from 'unplugin-vue-router'
 import VueRouter from 'unplugin-vue-router/vite'
 
 import vue from '@vitejs/plugin-vue'
@@ -16,6 +19,27 @@ export default defineConfig({
   },
   plugins: [
     VueRouter({}),
+    AutoImport({
+      include: [
+        /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+        /\.vue$/,
+        /\.vue\?vue/, // .vue
+        /\.md$/, // .md
+      ],
+      imports: [
+        'vue',
+        VueRouterAutoImports,
+        {
+          pinia: ['defineStore', 'storeToRefs', 'acceptHMRUpdate'],
+        },
+      ],
+      dts: true,
+      viteOptimizeDeps: true,
+      dirs: ['src/stores'],
+    }),
+    Components({
+      dts: true,
+    }),
     vue({
       template: {
         compilerOptions: {
