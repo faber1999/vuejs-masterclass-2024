@@ -2,6 +2,8 @@
 import { useRoute } from 'vue-router'
 
 const { params } = useRoute('/tasks/[id]')
+
+usePageStore().pageData.title = 'Task Detail'
 </script>
 
 <template>

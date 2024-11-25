@@ -1,5 +1,7 @@
 <script setup lang="ts">
 const { params } = useRoute('/projects/[slug]')
+
+usePageStore().pageData.title = 'Project Detail'
 </script>
 
 <template>
