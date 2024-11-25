@@ -38,8 +38,3 @@ pnpm-lock.yaml
 .env
 .env.*
 !.env.example
-
-#generated types
-typed-router.d.ts
-components.d.ts
-auto-imports.d.ts
