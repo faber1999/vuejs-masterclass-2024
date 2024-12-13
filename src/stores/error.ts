@@ -12,29 +12,42 @@ const isPostgrestError = (err: Error): err is PostgrestError => {
 
 export const useErrorStore = defineStore('error-store', () => {
   const activeError = ref<null | CustomError | ExtendedPostgrestError>(null)
+  const isCustomError = ref(false)
 
-  const setError = ({ error, errorCode }: MyError) => {
+  const setError = ({ error, errorCode = 500 }: MyError) => {
     if (typeof error === 'string') {
-      activeError.value = typeof error === 'string' ? Error(error) : error
-      activeError.value.customCode = errorCode || 500
+      isCustomError.value = true
+      activeError.value = Error(error)
+      activeError.value.customCode = errorCode
       return
     }
 
     if (isPostgrestError(error)) {
       activeError.value = error
-      activeError.value.customCode = errorCode || 500
+      activeError.value.customCode = errorCode
       return
     }
 
     if (error instanceof Error) {
       activeError.value = error
-      activeError.value.customCode = errorCode || 500
+      activeError.value.customCode = errorCode
       return
     }
+  }
+
+  const clearError = () => {
+    activeError.value = null
+    isCustomError.value = false
   }
 
   return {
     activeError,
     setError,
+    isCustomError,
+    clearError,
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useErrorStore, import.meta.hot))
+}

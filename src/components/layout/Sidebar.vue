@@ -8,8 +8,14 @@ const links = [
 const accountLinks = [
   { title: 'Profile', to: '/profile', icon: 'lucide:user' },
   { title: 'Settings', to: '/settings', icon: 'lucide:settings' },
-  { title: 'Sign out', to: '/signout', icon: 'lucide:log-out' },
+  { title: 'Sign out', icon: 'lucide:log-out' },
 ]
+
+const executeAction = (linkTitle: string) => {
+  if (linkTitle === 'sign out') {
+    console.log('Signing out...')
+  }
+}
 </script>
 
 <template>
@@ -30,7 +36,7 @@ const accountLinks = [
       </div>
 
       <div class="border-y text-center bg-background py-3">
-        <SidebarLinks :links="accountLinks" />
+        <SidebarLinks :links="accountLinks" @action-clicked="executeAction" />
       </div>
     </nav>
   </aside>
