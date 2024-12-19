@@ -29,12 +29,19 @@ coverage
 
 *.tsbuildinfo
 
-# lock files
+# Lock files
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-#environment files
+# Environment files
 .env
 .env.*
 !.env.example
+
+# Auto-generated files
+auto-imports.d.ts
+components.d.ts
+typed-router.d.ts
+
+vite.config.ts.*

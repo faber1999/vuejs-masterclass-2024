@@ -35,7 +35,7 @@ export default defineConfig({
       ],
       dts: true,
       viteOptimizeDeps: true,
-      dirs: ['src/stores'],
+      dirs: ['src/stores/**', 'src/composables/**'],
     }),
     Components({
       dts: true,

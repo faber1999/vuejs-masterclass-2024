@@ -8,12 +8,17 @@ const links = [
 const accountLinks = [
   { title: 'Profile', to: '/profile', icon: 'lucide:user' },
   { title: 'Settings', to: '/settings', icon: 'lucide:settings' },
-  { title: 'Sign out', icon: 'lucide:log-out' },
+  { title: 'Sign Out', icon: 'lucide:log-out' },
 ]
 
-const executeAction = (linkTitle: string) => {
-  if (linkTitle === 'sign out') {
-    console.log('Signing out...')
+const router = useRouter()
+
+const executeAction = async (linkTitle: string) => {
+  if (linkTitle === 'Sign Out') {
+    const { logOut } = await import('@/utils/supaAuth')
+    const isLoggedOut = await logOut()
+
+    if (isLoggedOut) router.push('/login')
   }
 }
 </script>

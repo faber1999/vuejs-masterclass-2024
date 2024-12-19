@@ -1,19 +1,32 @@
 <script setup lang="ts">
 import { logIn } from '@/utils/supaAuth'
+import { watchDebounced } from '@vueuse/core'
 
 const formData = ref({
   email: '',
   password: '',
 })
 
+const { serverError, handleServerError, handleLoginForm, realtimeErrors } = useFormErrors()
 const router = useRouter()
 
-const signIn = async () => {
-  const isLoggedIn = await logIn(formData.value)
+watchDebounced(
+  formData,
+  () => {
+    handleLoginForm(formData.value)
+  },
+  {
+    debounce: 300,
+    deep: true,
+  },
+)
 
-  if (isLoggedIn) {
-    router.push('/')
-  }
+const signIn = async () => {
+  const { error } = await logIn(formData.value)
+
+  if (!error) return router.push('/')
+
+  handleServerError(error)
 }
 </script>
 
@@ -33,15 +46,42 @@ const signIn = async () => {
         <form class="grid gap-4" @submit.prevent="signIn">
           <div class="grid gap-2">
             <Label id="email" class="text-left">Email</Label>
-            <Input type="email" placeholder="johndoe19@example.com" required v-model="formData.email" />
+            <Input
+              type="email"
+              placeholder="user@gmail.com"
+              required
+              v-model="formData.email"
+              :class="{ 'border-red-500': serverError || realtimeErrors?.email.length }"
+            />
+
+            <ul class="text-sm text-left text-red-500" v-if="realtimeErrors?.email.length">
+              <li v-for="error in realtimeErrors.email" :key="error" class="list-disc">{{ error }}</li>
+            </ul>
           </div>
+
           <div class="grid gap-2">
             <div class="flex items-center">
               <Label id="password">Password</Label>
               <a href="#" class="inline-block ml-auto text-xs underline"> Forgot your password? </a>
             </div>
-            <Input id="password" type="password" autocomplete required v-model="formData.password" />
+            <Input
+              id="password"
+              type="password"
+              autocomplete
+              required
+              v-model="formData.password"
+              :class="{ 'border-red-500': serverError || realtimeErrors?.password.length }"
+            />
+
+            <ul class="text-sm text-left text-red-500" v-if="realtimeErrors?.password.length">
+              <li v-for="error in realtimeErrors.password" :key="error" class="list-disc">{{ error }}</li>
+            </ul>
           </div>
+
+          <ul class="text-sm text-left text-red-500" v-if="serverError">
+            <li class="list-disc">{{ serverError }}</li>
+          </ul>
+
           <Button type="submit" class="w-full"> Login </Button>
         </form>
         <div class="mt-4 text-sm text-center">

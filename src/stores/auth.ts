@@ -6,6 +6,7 @@ import type { Session, User } from '@supabase/supabase-js'
 export const useAuthStore = defineStore('auth-store', () => {
   const user = ref<null | User>(null)
   const profile = ref<null | Tables<'profiles'>>(null)
+  const isTrackingAuthChanges = ref(false)
 
   const setProfile = async () => {
     if (!user.value) {
@@ -16,21 +17,16 @@ export const useAuthStore = defineStore('auth-store', () => {
     if (!profile.value || profile.value.id !== user.value.id) {
       const { data, error } = await profileQuery(user.value.id)
 
-      if (error) {
-        useErrorStore().setError({
-          error: error.message,
-        })
+      if (error) console.log(error)
 
-        return
-      }
-
-      profile.value = data
+      profile.value = data || null
     }
   }
 
   const setAuth = async (userSession: null | Session = null) => {
     if (!userSession) {
       user.value = null
+      profile.value = null
       return
     }
 
@@ -41,9 +37,22 @@ export const useAuthStore = defineStore('auth-store', () => {
   const getSession = async () => {
     const { data, error } = await supabase.auth.getSession()
 
+    if (error) console.log(error)
+
     if (data.session?.user) {
       await setAuth(data.session)
     }
+  }
+
+  const trackAuthChanges = () => {
+    if (isTrackingAuthChanges.value) return
+
+    isTrackingAuthChanges.value = true
+    supabase.auth.onAuthStateChange((event, session) => {
+      setTimeout(async () => {
+        await setAuth(session)
+      }, 0)
+    })
   }
 
   return {
@@ -51,6 +60,7 @@ export const useAuthStore = defineStore('auth-store', () => {
     profile,
     setAuth,
     getSession,
+    trackAuthChanges,
   }
 })
 
