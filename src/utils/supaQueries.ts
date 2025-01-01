@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient'
+import type { Database } from '@base/database/types'
 import type { QueryData } from '@supabase/supabase-js'
 
 export const tasksWithProjectsQuery = supabase.from('tasks').select(`
@@ -49,6 +50,12 @@ export const taskQuery = (id: string) =>
 
 export type Task = QueryData<ReturnType<typeof taskQuery>>
 
-export const profileQuery = (id: string) => {
-  return supabase.from('profiles').select('*').eq('id', id).single()
+export const profileQuery = ({ column, value }: { column: keyof Database['public']['Tables']['profiles']['Row']; value: string }) => {
+  return supabase.from('profiles').select('*').eq(column, value).single()
 }
+
+export const groupedProfilesQuery = (userIds: string[]) => {
+  return supabase.from('profiles').select('username, avatar_url, id, full_name').in('id', userIds)
+}
+
+export type Collabs = QueryData<ReturnType<typeof groupedProfilesQuery>>

@@ -14,11 +14,11 @@ import tailwind from 'tailwindcss'
 export default defineConfig({
   css: {
     postcss: {
-      plugins: [tailwind, autoprefixer],
+      plugins: [tailwind(), autoprefixer()],
     },
   },
   plugins: [
-    VueRouter({}),
+    VueRouter(),
     AutoImport({
       include: [
         /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx

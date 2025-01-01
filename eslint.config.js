@@ -11,8 +11,7 @@ export default [
     name: 'app/files-to-ignore',
     ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
   },
-  ...pluginVue.configs['flat/essential'],
-  ...pluginVue.configs['flat/strongly-recommended'],
+  ...pluginVue.configs[('flat/essential', 'flat/strongly-recommended')],
   ...vueTsEslintConfig(),
   skipFormatting,
   {

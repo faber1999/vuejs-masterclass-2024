@@ -1,7 +1,20 @@
 <script setup lang="ts">
+import { profileQuery } from '@/utils/supaQueries'
+import type { Tables } from '@base/database/types'
+
 const { username } = useRoute('/users/[username]').params
 
-const { profile } = storeToRefs(useAuthStore())
+const profile = ref<Tables<'profiles'> | null>(null)
+
+const getProfile = async () => {
+  const { data, error, status } = await profileQuery({ column: 'username', value: username })
+
+  if (error) useErrorStore().setError({ error, errorCode: status })
+
+  profile.value = data
+}
+
+await getProfile()
 </script>
 
 <template>
