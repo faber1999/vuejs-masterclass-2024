@@ -1,11 +1,10 @@
-import { projectQuery } from '../../utils/supaQueries';
 <script setup lang="ts">
-import type { Project } from '@/utils/supaQueries'
-import { projectQuery } from '@/utils/supaQueries'
+const { slug } = useRoute('/projects/[slug]').params
 
-const { params } = useRoute('/projects/[slug]')
+const projectsLoader = useProjectsStore()
 
-const project = ref<Project | null>(null)
+const { project } = storeToRefs(projectsLoader)
+const { getProject, updateProject } = projectsLoader
 
 watch(
   () => project.value?.name,
@@ -14,23 +13,16 @@ watch(
   },
 )
 
-const getProjects = async () => {
-  const { data, error, status } = await projectQuery(params.slug)
-
-  if (error) {
-    useErrorStore().setError({ error, errorCode: status })
-  }
-
-  project.value = data
-}
-await getProjects()
+await getProject(slug)
 </script>
 
 <template>
   <Table v-if="project">
     <TableRow>
       <TableHead> Name </TableHead>
-      <TableCell> {{ project.name }} </TableCell>
+      <TableCell>
+        <AppInPlaceEditText v-model="project.name" @commit="updateProject" />
+      </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Description </TableHead>

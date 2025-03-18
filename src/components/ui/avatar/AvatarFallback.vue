@@ -5,7 +5,7 @@ const props = defineProps<AvatarFallbackProps>()
 </script>
 
 <template>
-  <AvatarFallback v-bind="props">
+  <AvatarFallback v-bind="props" class="h-full w-full object-cover">
     <slot />
   </AvatarFallback>
 </template>
