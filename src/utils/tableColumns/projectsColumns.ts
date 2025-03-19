@@ -6,6 +6,7 @@ import type { Ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { Projects } from '../supaQueries'
 import AvatarFallback from '@/components/ui/avatar/AvatarFallback.vue'
+import AppInPlaceEditStatus from '@/components/AppInPlaceEdit/AppInPlaceEditStatus.vue'
 
 export const columns: (collabs: Ref<GroupedCollabs>) => ColumnDef<Projects[0]>[] = collabs => [
   {
@@ -22,6 +23,14 @@ export const columns: (collabs: Ref<GroupedCollabs>) => ColumnDef<Projects[0]>[]
   {
     accessorKey: 'status',
     header: () => h('div', { class: 'text-left' }, 'Status'),
+    cell: ({ row }) => {
+      return h(
+        'div',
+        { class: 'text-left font-medium' },
+
+        h(AppInPlaceEditStatus, { modelValue: row.original.status }),
+      )
+    },
   },
   {
     accessorKey: 'collaborators',
