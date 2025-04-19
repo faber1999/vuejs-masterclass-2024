@@ -47,7 +47,7 @@ const table = useVueTable({
   </div>
 </template>
 
-<!-- <style scoped>
+<style scoped>
 td {
   @apply p-0;
 }
@@ -55,4 +55,4 @@ td {
 td > * {
   @apply p-4;
 }
-</style> -->
+</style>

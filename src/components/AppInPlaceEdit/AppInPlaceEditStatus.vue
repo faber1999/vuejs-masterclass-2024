@@ -1,9 +1,17 @@
 <script setup lang="ts">
+interface Props {
+  readOnly?: boolean
+}
+
+const { readOnly = false } = defineProps<Props>()
+
 const status = defineModel<'in-progress' | 'completed'>()
 
 const emits = defineEmits(['commit'])
 
 const toggleValue = () => {
+  if (readOnly) return
+
   status.value = status.value === 'completed' ? 'in-progress' : 'completed'
   emits('commit')
 }

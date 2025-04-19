@@ -1,7 +1,7 @@
 import { supabase } from '@/lib/supabaseClient'
 import { profileQuery } from '@/utils/supaQueries'
-import type { Tables } from '@base/database/types'
 import type { Session, User } from '@supabase/supabase-js'
+import type { Tables } from 'database/types'
 
 export const useAuthStore = defineStore('auth-store', () => {
   const user = ref<null | User>(null)
@@ -15,11 +15,20 @@ export const useAuthStore = defineStore('auth-store', () => {
     }
 
     if (!profile.value || profile.value.id !== user.value.id) {
-      const { data, error } = await profileQuery({ column: 'id', value: user.value.id })
+      const { data } = await profileQuery({
+        column: 'id',
+        value: user.value.id,
+      })
 
-      if (error) console.log(error)
+      if (!data) {
+        // El usuario autenticado ya no existe en la tabla de perfiles
+        user.value = null
+        profile.value = null
+        // Opcional: console.warn('El usuario autenticado ya no existe en la tabla de perfiles')
+        return
+      }
 
-      profile.value = data || null
+      profile.value = data
     }
   }
 
@@ -35,13 +44,8 @@ export const useAuthStore = defineStore('auth-store', () => {
   }
 
   const getSession = async () => {
-    const { data, error } = await supabase.auth.getSession()
-
-    if (error) console.log(error)
-
-    if (data.session?.user) {
-      await setAuth(data.session)
-    }
+    const { data } = await supabase.auth.getSession()
+    if (data.session?.user) await setAuth(data.session)
   }
 
   const trackAuthChanges = () => {
