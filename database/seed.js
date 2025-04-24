@@ -43,14 +43,7 @@ const createPrimaryTestUser = async () => {
   const { data, error } = await supabase.auth.signUp({
     email: email,
     password: 'password',
-    options: {
-      data: {
-        first_name: firstName,
-        last_name: lastName,
-        full_name: firstName + ' ' + lastName,
-        username: userName,
-      },
-    },
+    options: { data: { first_name: firstName, last_name: lastName, full_name: firstName + ' ' + lastName, username: userName } },
   })
 
   if (error) {
@@ -59,20 +52,22 @@ const createPrimaryTestUser = async () => {
 
   if (data) {
     const userId = data.user.id
-    await supabase.from('profiles').insert({
-      id: userId,
-      full_name: firstName + ' ' + lastName,
-      username: userName,
-      bio: 'The main testing account',
-      avatar_url: `https://i.pravatar.cc/150?u=${data.user.id}`,
-    })
+    await supabase
+      .from('profiles')
+      .insert({
+        id: userId,
+        full_name: firstName + ' ' + lastName,
+        username: userName,
+        bio: 'The main testing account',
+        avatar_url: `https://i.pravatar.cc/150?u=${data.user.id}`,
+      })
 
     logStep('Primary test user created successfully.')
     return userId
   }
 }
 
-const seedProjects = async (numEntries, userId) => {
+const seedProjects = async numEntries => {
   logStep('Seeding projects...')
   const projects = []
 
@@ -84,7 +79,6 @@ const seedProjects = async (numEntries, userId) => {
       slug: name.toLocaleLowerCase().replace(/ /g, '-'),
       description: faker.lorem.paragraphs(2),
       status: faker.helpers.arrayElement(['in-progress', 'completed']),
-      collaborators: faker.helpers.arrayElements([userId]),
     })
   }
 
@@ -109,7 +103,6 @@ const seedTasks = async (numEntries, projectsIds, userId) => {
       due_date: faker.date.future(),
       profile_id: userId,
       project_id: faker.helpers.arrayElement(projectsIds),
-      collaborators: faker.helpers.arrayElements([userId]),
     })
   }
 
@@ -118,6 +111,40 @@ const seedTasks = async (numEntries, projectsIds, userId) => {
   if (error) return logErrorAndExit('Tasks', error)
 
   logStep('Tasks seeded successfully.')
+
+  return data
+}
+
+const seedTaskCollaborators = async (tasksIds, userId) => {
+  logStep('Seeding task collaborators...')
+  const taskCollaborators = []
+
+  tasksIds.forEach(taskId => {
+    taskCollaborators.push({ task_id: taskId, profile_id: userId })
+  })
+
+  const { data, error } = await supabase.from('task_collaborators').insert(taskCollaborators)
+
+  if (error) return logErrorAndExit('Task Collaborators', error)
+
+  logStep('Task collaborators seeded successfully.')
+
+  return data
+}
+
+const seedProjectCollaborators = async (projectsIds, userId) => {
+  logStep('Seeding project collaborators...')
+  const projectCollaborators = []
+
+  projectsIds.forEach(projectId => {
+    projectCollaborators.push({ project_id: projectId, profile_id: userId })
+  })
+
+  const { data, error } = await supabase.from('project_collaborators').insert(projectCollaborators)
+
+  if (error) return logErrorAndExit('Project Collaborators', error)
+
+  logStep('Project collaborators seeded successfully.')
 
   return data
 }
@@ -134,8 +161,13 @@ const seedDatabase = async numEntriesPerTable => {
     userId = testUserId
   }
 
-  const projectsIds = (await seedProjects(numEntriesPerTable, userId)).map(project => project.id)
-  await seedTasks(numEntriesPerTable, projectsIds, userId)
+  const projectsIds = (await seedProjects(numEntriesPerTable)).map(project => project.id)
+  const tasksIds = (await seedTasks(numEntriesPerTable, projectsIds, userId)).map(task => task.id)
+
+  await seedProjectCollaborators(projectsIds, userId)
+  await seedTaskCollaborators(tasksIds, userId)
+
+  logStep('Database seeded successfully.')
 }
 
 const numEntriesPerTable = 10

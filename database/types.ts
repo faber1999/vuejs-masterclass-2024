@@ -39,6 +39,36 @@ export type Database = {
         }
         Relationships: []
       }
+      project_collaborators: {
+        Row: {
+          profile_id: string
+          project_id: number
+        }
+        Insert: {
+          profile_id: string
+          project_id: number
+        }
+        Update: {
+          profile_id?: string
+          project_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_collaborators_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_collaborators_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       projects: {
         Row: {
           collaborators: string[] | null
@@ -69,9 +99,38 @@ export type Database = {
         }
         Relationships: []
       }
+      task_collaborators: {
+        Row: {
+          profile_id: string
+          task_id: number
+        }
+        Insert: {
+          profile_id: string
+          task_id: number
+        }
+        Update: {
+          profile_id?: string
+          task_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_collaborators_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_collaborators_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tasks: {
         Row: {
-          collaborators: string[]
           created_at: string
           description: string
           due_date: string | null
@@ -82,7 +141,6 @@ export type Database = {
           status: Database["public"]["Enums"]["current_status"]
         }
         Insert: {
-          collaborators?: string[]
           created_at?: string
           description: string
           due_date?: string | null
@@ -93,7 +151,6 @@ export type Database = {
           status?: Database["public"]["Enums"]["current_status"]
         }
         Update: {
-          collaborators?: string[]
           created_at?: string
           description?: string
           due_date?: string | null
