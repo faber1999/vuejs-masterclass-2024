@@ -10,13 +10,29 @@ export const tasksWithProjectsQuery = supabase.from('tasks').select(`
       id,
       name,
       slug
+    ),
+    collaborators:task_collaborators (
+      profile:profiles (
+        id,
+        username,
+        avatar_url
+      )
     )
   `)
 export type TasksWithProjects = QueryData<typeof tasksWithProjectsQuery>
 
 /* Projects Queries */
 
-export const projectsQuery = supabase.from('projects').select()
+export const projectsQuery = supabase.from('projects').select(`
+    *,
+    collaborators:project_collaborators (
+      profile:profiles (
+        id,
+        username,
+        avatar_url
+      )
+    )
+  `)
 export type Projects = QueryData<typeof projectsQuery>
 
 export const projectQuery = (slug: string) =>
@@ -24,14 +40,21 @@ export const projectQuery = (slug: string) =>
     .from('projects')
     .select(
       `
-  *,
-  tasks (
-    id,
-    name,
-    status,
-    due_date
-  )
-  `,
+        *,
+        tasks (
+          id,
+          name,
+          status,
+          due_date
+        ),
+        collaborators:project_collaborators (
+          profile:profiles (
+            id,
+            username,
+            avatar_url
+          )
+        )
+      `,
     )
     .eq('slug', slug)
     .single()
@@ -57,6 +80,13 @@ export const taskQuery = (id: string) =>
         id,
         name,
         slug
+      ),
+      collaborators:task_collaborators (
+        profile:profiles (
+          id,
+          username,
+          avatar_url
+        )
       )`,
     )
     .eq('id', id)

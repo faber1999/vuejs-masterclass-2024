@@ -14,10 +14,6 @@ watch(
 )
 
 await getTask(id)
-
-const { getProfilesByIds } = useCollabs()
-
-const collabs = await getProfilesByIds(task.value?.collaborators || [])
 </script>
 
 <template>
@@ -52,7 +48,7 @@ const collabs = await getProfilesByIds(task.value?.collaborators || [])
       <TableHead> Collaborators </TableHead>
       <TableCell>
         <div class="flex">
-          <Avatar class="-mr-4 border border-primary hover:scale-110 transition-transform" v-for="collab in collabs" :key="collab.id">
+          <Avatar class="-mr-4 border border-primary hover:scale-110 transition-transform" v-for="{profile: collab} in task.collaborators" :key="collab.id">
             <RouterLink
               class="w-full h-full flex items-center justify-center"
               :to="{

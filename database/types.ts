@@ -71,7 +71,6 @@ export type Database = {
       }
       projects: {
         Row: {
-          collaborators: string[] | null
           created_at: string
           description: string
           id: number
@@ -80,7 +79,6 @@ export type Database = {
           status: Database["public"]["Enums"]["current_status"]
         }
         Insert: {
-          collaborators?: string[] | null
           created_at?: string
           description?: string
           id?: never
@@ -89,7 +87,6 @@ export type Database = {
           status?: Database["public"]["Enums"]["current_status"]
         }
         Update: {
-          collaborators?: string[] | null
           created_at?: string
           description?: string
           id?: never

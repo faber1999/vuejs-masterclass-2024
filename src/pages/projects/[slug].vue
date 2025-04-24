@@ -14,10 +14,6 @@ watch(
 )
 
 await getProject(slug)
-
-const { getProfilesByIds } = useCollabs()
-
-const collabs = await getProfilesByIds(project.value?.collaborators || [])
 </script>
 
 <template>
@@ -44,7 +40,7 @@ const collabs = await getProfilesByIds(project.value?.collaborators || [])
       <TableHead> Collaborators </TableHead>
       <TableCell>
         <div class="flex">
-          <Avatar class="-mr-4 border border-primary hover:scale-110 transition-transform" v-for="collab in collabs" :key="collab.id">
+          <Avatar class="-mr-4 border border-primary hover:scale-110 transition-transform" v-for="{profile: collab} in project.collaborators" :key="collab.id">
             <RouterLink
               class="w-full h-full flex items-center justify-center"
               :to="{

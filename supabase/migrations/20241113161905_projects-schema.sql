@@ -10,6 +10,5 @@ create table projects(
   name text not null,
   slug text unique not null,
   description text not null default '',
-  status current_status default 'in-progress' not null,
-  collaborators text array default array [] :: varchar []
+  status current_status default 'in-progress' not null
 );
