@@ -1,6 +1,16 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "typed-router.d.ts", "database/types.ts", "auto-imports.d.ts", "components.d.ts"],
+  "include": [
+    "env.d.ts",
+    "src/**/*",
+    "src/**/*.vue",
+    "typed-router.d.ts",
+    "database/types.ts",
+    "auto-imports.d.ts",
+    "components.d.ts",
+    "formkit.config.ts",
+    "formkit.theme.ts"
+  ],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {
     "composite": true,

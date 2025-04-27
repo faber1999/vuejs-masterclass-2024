@@ -94,7 +94,7 @@ export const useTasksStore = defineStore('tasks-store', () => {
   const updateTask = async () => {
     if (!task.value) return
 
-    const { projects: _projects, id, ...taskProps } = task.value
+    const { projects: _projects, collaborators: _collaborators, id, ...taskProps } = task.value
 
     await updateTaskQuery(taskProps, id)
   }

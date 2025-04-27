@@ -67,7 +67,7 @@ export const useProjectsStore = defineStore('projects-store', () => {
   const updateProject = async () => {
     if (!project.value) return
 
-    const { tasks: _tasks, id, ...projectProps } = project.value
+    const { tasks: _tasks, collaborators: _collaborators, id, ...projectProps } = project.value
 
     await updateProjectQuery(projectProps, id)
   }

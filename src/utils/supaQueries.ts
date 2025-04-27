@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabaseClient'
+import type { CreateNewTask } from '@/types/CreateNewForm'
 import type { Database } from '@base/database/types'
 import type { QueryData } from '@supabase/supabase-js'
 
@@ -81,6 +82,10 @@ export const taskQuery = (id: string) =>
         name,
         slug
       ),
+      owner:profiles!tasks_profile_id_fkey (
+        id,
+        full_name
+      ),
       collaborators:task_collaborators (
         profile:profiles (
           id,
@@ -89,7 +94,7 @@ export const taskQuery = (id: string) =>
         )
       )`,
     )
-    .eq('id', id)
+    .eq('id', Number(id))
     .single()
 
 export type Task = QueryData<ReturnType<typeof taskQuery>>
@@ -104,6 +109,8 @@ export const profileQuery = ({ column, value }: { column: keyof Database['public
   return supabase.from('profiles').select('*').eq(column, value).single()
 }
 
+export const profilesQuery = supabase.from('profiles').select('id, full_name')
+
 export const groupedProfilesQuery = (userIds: string[]) => {
   return supabase.from('profiles').select('username, avatar_url, id, full_name').in('id', userIds)
 }
@@ -111,3 +118,7 @@ export const groupedProfilesQuery = (userIds: string[]) => {
 /* Collabs queries */
 
 export type Collabs = QueryData<ReturnType<typeof groupedProfilesQuery>>
+
+export const createNewTaskQuery = (newTask: CreateNewTask) => {
+  return supabase.from('tasks').insert(newTask)
+}

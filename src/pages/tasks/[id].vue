@@ -32,7 +32,7 @@ await getTask(id)
     </TableRow>
     <TableRow>
       <TableHead> Assignee </TableHead>
-      <TableCell>Lorem ipsum</TableCell>
+      <TableCell>{{ task.owner?.full_name }}</TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Project </TableHead>
@@ -48,7 +48,11 @@ await getTask(id)
       <TableHead> Collaborators </TableHead>
       <TableCell>
         <div class="flex">
-          <Avatar class="-mr-4 border border-primary hover:scale-110 transition-transform" v-for="{profile: collab} in task.collaborators" :key="collab.id">
+          <Avatar
+            class="-mr-4 border border-primary hover:scale-110 transition-transform"
+            v-for="{ profile: collab } in task.collaborators"
+            :key="collab.id"
+          >
             <RouterLink
               class="w-full h-full flex items-center justify-center"
               :to="{

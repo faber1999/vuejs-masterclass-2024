@@ -1,9 +1,13 @@
 <script setup lang="ts">
 const { pageData } = storeToRefs(usePageStore())
+
+const isNewTaskOpen = ref(false)
 </script>
 
 <template>
-  <Sidebar />
+  <Sidebar @task-clicked="isNewTaskOpen = true" />
+  <AppNewTask v-model="isNewTaskOpen" />
+
   <div class="flex flex-col lg:ml-52 ml-16 transition-[margin]">
     <TopNavbar />
 

@@ -21,7 +21,8 @@
     "supabase:types": "node --env-file=.env -e \"const { execSync } = require('child_process'); execSync('npx supabase gen types --lang=typescript --project-id ' + process.env.SUPABASE_PROJECT_REF + ' --schema public > database/types.ts', { stdio: 'inherit' });\""
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.46.1",
+    "@formkit/vue": "^1.6.9",
+    "@supabase/supabase-js": "^2.49.4",
     "@tanstack/vue-table": "^8.20.5",
     "@vueuse/core": "^12.0.0",
     "class-variance-authority": "^0.7.1",
@@ -50,7 +51,7 @@
     "eslint-plugin-vue": "^9.29.0",
     "npm-run-all2": "^6.1.2",
     "prettier": "^3.3.3",
-    "supabase": "^2.20.12",
+    "supabase": "^2.22.6",
     "tailwindcss": "^3.4.4",
     "typescript": "~5.7.2",
     "unplugin-auto-import": "^0.19.0",

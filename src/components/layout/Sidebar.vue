@@ -7,7 +7,6 @@ const links = [
 
 const accountLinks = [
   { title: 'Profile', to: '/profile', icon: 'lucide:user' },
-  { title: 'Settings', to: '/settings', icon: 'lucide:settings' },
   { title: 'Sign Out', icon: 'lucide:log-out' },
 ]
 
@@ -21,6 +20,8 @@ const executeAction = async (linkTitle: string) => {
     if (isLoggedOut) router.push('/login')
   }
 }
+
+defineEmits(['taskClicked'])
 </script>
 
 <template>
@@ -37,7 +38,7 @@ const executeAction = async (linkTitle: string) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>Task</DropdownMenuItem>
+          <DropdownMenuItem @click="$emit('taskClicked')">Task</DropdownMenuItem>
           <DropdownMenuItem>Project</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
