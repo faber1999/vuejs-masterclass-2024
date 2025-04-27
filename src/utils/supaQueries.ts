@@ -68,10 +68,6 @@ export const updateProjectQuery = (updatedProject = {}, id: number) => {
 
 /* Tasks queries */
 
-export const tasksQuery = supabase.from('tasks').select()
-
-export type Tasks = QueryData<typeof tasksQuery>
-
 export const taskQuery = (id: string) =>
   supabase
     .from('tasks')
@@ -101,6 +97,10 @@ export type Task = QueryData<ReturnType<typeof taskQuery>>
 
 export const updateTaskQuery = (updatedTask = {}, id: number) => {
   return supabase.from('tasks').update(updatedTask).eq('id', id)
+}
+
+export const deleteTaskQuery = (id: number) => {
+  return supabase.from('tasks').delete().eq('id', id)
 }
 
 /* Profiles queries */

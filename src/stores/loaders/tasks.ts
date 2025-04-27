@@ -1,26 +1,16 @@
-import {
-  tasksWithProjectsQuery,
-  taskQuery,
-  tasksQuery,
-  updateTaskQuery,
-  type Task,
-  type Tasks,
-  type TasksWithProjects,
-} from '@/utils/supaQueries'
+import { tasksWithProjectsQuery, taskQuery, updateTaskQuery, type Task, type TasksWithProjects, deleteTaskQuery } from '@/utils/supaQueries'
 import { useMemoize } from '@vueuse/core'
 
 export const useTasksStore = defineStore('tasks-store', () => {
-  const tasksWithProjects = ref<TasksWithProjects | null>(null)
+  const tasks = ref<TasksWithProjects | null>(null)
   const task = ref<Task | null>(null)
-  const tasks = ref<Tasks | null>(null)
 
-  const loadTasksWithProjects = useMemoize(async (key: string) => await tasksWithProjectsQuery)
-  const loadTasks = useMemoize(async (key: string) => await tasksQuery)
+  const loadTasks = useMemoize(async (key: string) => await tasksWithProjectsQuery)
   const loadTask = useMemoize(async (id: string) => await taskQuery(id))
 
   interface ValidateCacheParams {
     ref: typeof tasks | typeof task
-    query: typeof tasksQuery | typeof taskQuery | typeof tasksWithProjectsQuery
+    query: typeof taskQuery | typeof tasksWithProjectsQuery
     key: string
     loaderFn: typeof loadTasks | typeof loadTask
   }
@@ -51,7 +41,7 @@ export const useTasksStore = defineStore('tasks-store', () => {
 
     validateCache({
       ref: tasks,
-      query: tasksQuery,
+      query: tasksWithProjectsQuery,
       key: 'tasks',
       loaderFn: loadTasks,
     })
@@ -74,39 +64,27 @@ export const useTasksStore = defineStore('tasks-store', () => {
     })
   }
 
-  const getTasksWithProjects = async () => {
-    tasksWithProjects.value = null
-
-    const { data, error, status } = await loadTasksWithProjects('tasksWithProjects')
-
-    if (error) useErrorStore().setError({ error, errorCode: status })
-
-    if (data) tasksWithProjects.value = data
-
-    validateCache({
-      ref: task,
-      query: tasksWithProjectsQuery,
-      key: 'tasksWithProjects',
-      loaderFn: loadTask,
-    })
-  }
-
   const updateTask = async () => {
     if (!task.value) return
 
-    const { projects: _projects, collaborators: _collaborators, id, ...taskProps } = task.value
+    const { projects: _projects, owner: _owner, collaborators: _collaborators, id, ...taskProps } = task.value
 
     await updateTaskQuery(taskProps, id)
   }
 
+  const deleteTask = async () => {
+    if (!task.value) return
+
+    await deleteTaskQuery(task.value.id)
+  }
+
   return {
-    getTasksWithProjects,
-    tasksWithProjects,
     getTasks,
     tasks,
     getTask,
     task,
     updateTask,
+    deleteTask,
   }
 })
 

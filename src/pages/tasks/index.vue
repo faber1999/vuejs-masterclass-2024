@@ -5,12 +5,12 @@ usePageStore().pageData.title = 'My Tasks'
 
 const tasksLoader = useTasksStore()
 
-const { tasksWithProjects } = storeToRefs(tasksLoader)
-const { getTasksWithProjects } = tasksLoader
+const { tasks } = storeToRefs(tasksLoader)
+const { getTasks } = tasksLoader
 
-await getTasksWithProjects()
+await getTasks()
 </script>
 
 <template>
-  <DataTable v-if="tasksWithProjects" :columns="columns" :data="tasksWithProjects" />
+  <DataTable v-if="tasks" :columns="columns" :data="tasks" />
 </template>
