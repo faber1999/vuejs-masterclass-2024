@@ -108,8 +108,8 @@ const triggerDelete = async () => {
 
     <Button class="self-end w-full max-w-40" variant="destructive" @click="triggerDelete">
       <Transition name="scale" mode="out-in">
-        <iconify-icon v-if="deletingTask" icon="lucide:loader-circle" class="mr-1 animate-spin"></iconify-icon>
-        <iconify-icon v-else icon="lucide:trash-2" class="mr-1"></iconify-icon>
+        <iconify-icon v-if="deletingTask" icon="lucide:loader-circle" class="mr-1 animate-spin" />
+        <iconify-icon v-else icon="lucide:trash-2" class="mr-1" />
       </Transition>
 
       Delete Task
@@ -117,7 +117,7 @@ const triggerDelete = async () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 th {
   @apply w-[100px];
 }
